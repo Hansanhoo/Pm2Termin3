@@ -15,9 +15,11 @@ public class BarBezahlungsWekzeug
 	
 	/**
 	 * Konstruktor zur Barbezahlung
+	 * @require preisFuerAuswahl > 0
 	 * @param preisFuerAuswahl
 	 */
 	public BarBezahlungsWekzeug(int preisFuerAuswahl) {
+		 assert preisFuerAuswahl > 0 : "Vorbedingung verletzt: preis > 0";
 		_zuBezahlenderPreis = preisFuerAuswahl;		
 	}
 	/**
@@ -88,10 +90,12 @@ public class BarBezahlungsWekzeug
     }
    /**
     * Rechnet Cent zu Euro
+    * @ensure cent > 0
     * @param cent
     * @return Euro als String
     */
     private String centZuEuro(int cent) {
+    	 assert cent > 0 : "Vorbedingung verletzt: cent > 0";
     	double betrag = Double.valueOf(cent);    	
     	betrag /= 100.00;  
     	

@@ -23,6 +23,7 @@ public class BarBezahlungUI
 	Label _lblZuBezahlenderPreis;
 	Label _txtRueckgeld;
 	Dialog<Boolean> _dialog;
+	
   	public BarBezahlungUI() {
   		 _dialog = getDialog();
   	}
