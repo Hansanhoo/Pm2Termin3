@@ -13,7 +13,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class BarBezahlungUI
+class BarBezahlungUI
 {
 
 	Button _bestaetigenButton;

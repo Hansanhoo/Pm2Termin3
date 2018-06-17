@@ -3,6 +3,7 @@ package de.hawhh.informatik.sml.kino.werkzeuge.platzverkauf;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 
 import de.hawhh.informatik.sml.kino.fachwerte.Platz;
+import de.hawhh.informatik.sml.kino.materialien.Vorstellung;
 
 /**
  * Widget, das die Plätze in einem Kinosaal grafisch darstellt und es
@@ -208,6 +210,10 @@ class Platzplan extends GridPane
     {
         return new HashSet<Platz>(_ausgewaehltePlaetze);
     }
+    public void setAusgewaehltePlaetze(Set<Platz> plaetze)
+    {
+        _ausgewaehltePlaetze = plaetze;
+    }
 
     /**
      * Entfernt die Auswahl, sodass keine Plätze mehr ausgewählt sind.
@@ -233,7 +239,23 @@ class Platzplan extends GridPane
     public void markierePlatzAlsVerkauft(Platz platz)
     {
         assert platz != null : "Vorbedingung verletzt: platz != null";
+        _buttons[platz.getReihenNr()][platz.getSitzNr()].setAusgewaehlt(false);
         _buttons[platz.getReihenNr()][platz.getSitzNr()].setVerkauft(true);
+//        repaint();
+    }
+    /**
+     * Markiert den angegebenen Platz als ausgewählt.
+     * 
+     * @param platz
+     *            der Platz.
+     * 
+     * @require platz != null
+     */
+    public void markierePlatzAlsAusgewaehlt(Platz platz)
+    {
+        assert platz != null : "Vorbedingung verletzt: platz != null";
+        _buttons[platz.getReihenNr()][platz.getSitzNr()].setAusgewaehlt(true);
+        _ausgewaehltePlaetze.add(platz);
 //        repaint();
     }
 
@@ -249,6 +271,7 @@ class Platzplan extends GridPane
     {
         assert platz != null : "Vorbedingung verletzt: platz != null";
         _buttons[platz.getReihenNr()][platz.getSitzNr()].setVerkauft(false);
+        
 //        repaint();
     }
 

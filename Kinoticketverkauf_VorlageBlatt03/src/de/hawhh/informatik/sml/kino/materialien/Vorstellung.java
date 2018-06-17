@@ -24,6 +24,7 @@ public class Vorstellung
     private Datum _datum;
     private int _preis;
     private boolean[][] _verkauft;
+    private boolean[][] _ausgewaehlt;
     private int _anzahlVerkauftePlaetze;
 
     /**
@@ -66,6 +67,8 @@ public class Vorstellung
         _datum = datum;
         _preis = preis;
         _verkauft = new boolean[kinosaal.getAnzahlReihen()][kinosaal
+                .getAnzahlSitzeProReihe()];
+        _ausgewaehlt= new boolean[kinosaal.getAnzahlReihen()][kinosaal
                 .getAnzahlSitzeProReihe()];
         _anzahlVerkauftePlaetze = 0;
     }
@@ -203,6 +206,14 @@ public class Vorstellung
 
         return _verkauft[platz.getReihenNr()][platz.getSitzNr()];
     }
+    public boolean istAusgewaehlt(Platz platz)
+    {
+        assert platz != null : "Vorbedingung verletzt: platz != null";
+        assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
+
+        return _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()];
+    }
+    
 
     /**
      * Verkauft einen Platz.
@@ -221,8 +232,25 @@ public class Vorstellung
         assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
         assert !istPlatzVerkauft(platz) : "Vorbedingung verletzt: !istPlatzVerkauft(platz)";
 
+        _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()] = false; 
         _verkauft[platz.getReihenNr()][platz.getSitzNr()] = true;
         _anzahlVerkauftePlaetze++;
+    }
+    /**
+     * Markiert einen Platz.
+     * 
+     * @param platz der Sitzplatz.
+     * 
+     * @require platz != null
+     * @require hatPlatz(platz)
+     * 
+     */
+    public void markierePlatz(Platz platz)
+    {
+        assert platz != null : "Vorbedingung verletzt: platz != null";
+        assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";      
+
+        _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()] = true; 
     }
 
     /**
@@ -272,6 +300,26 @@ public class Vorstellung
         for (Platz platz : plaetze)
         {
             verkaufePlatz(platz);
+        }
+    }
+    /**
+     * Markiert die gegebenen Plätze.
+     * 
+     * @require plaetze != null
+     * @require hatPlaetze(plaetze)
+     * @require sindVerkaufbar(plaetze)
+     * 
+     * @ensure alle angegebenen Plätze sind verkauft
+     */
+    public void markierePlaetze(Set<Platz> plaetze)
+    {
+        assert plaetze != null : "Vorbedingung verletzt: plaetze != null";
+        assert hatPlaetze(plaetze) : "Vorbedingung verletzt: hatPlaetze(plaetze)";
+        assert sindVerkaufbar(plaetze) : "Vorbedingung verletzt: sindVerkaufbar(plaetze)";
+
+        for (Platz platz : plaetze)
+        {
+            markierePlatz(platz);
         }
     }
 

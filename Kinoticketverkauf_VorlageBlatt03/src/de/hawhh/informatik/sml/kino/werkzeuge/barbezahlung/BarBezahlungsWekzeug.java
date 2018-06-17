@@ -1,5 +1,6 @@
 package de.hawhh.informatik.sml.kino.werkzeuge.barbezahlung;
 
+import de.hawhh.informatik.sml.kino.fachwerte.GeldBetrag;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -7,9 +8,9 @@ import javafx.stage.Stage;
 
 public class BarBezahlungsWekzeug
 {	
-	private int _zuBezahlenderPreis;
-	private int _bekommendesGeld;
-	private int _rueckGeld;
+	private GeldBetrag _zuBezahlenderPreis;
+	private GeldBetrag _bekommendesGeld;
+	private GeldBetrag _rueckGeld;
 	private BarBezahlungUI _ui;
 	
 	
@@ -20,7 +21,7 @@ public class BarBezahlungsWekzeug
 	 */
 	public BarBezahlungsWekzeug(int preisFuerAuswahl) {
 		 assert preisFuerAuswahl > 0 : "Vorbedingung verletzt: preis > 0";
-		_zuBezahlenderPreis = preisFuerAuswahl;		
+		_zuBezahlenderPreis = GeldBetrag.get(preisFuerAuswahl);		
 	}
 	/**
 	 * startet die UI
@@ -41,8 +42,10 @@ public class BarBezahlungsWekzeug
 	/**
 	 * Setzt den zu bezahlnden Preis auf TextField txtZuBezahlenderPreis
 	 */
-	private void setZuBezahlendenrPreis() {		
-		_ui.getLblZuBezahlenderPreis().setText(String.valueOf(_zuBezahlenderPreis));				
+	private void setZuBezahlendenrPreis() {		     
+          
+	      _ui.getLblZuBezahlenderPreis().setText(_zuBezahlenderPreis.getFormatiertenString());
+				
 	}
 	 /**
      * Fügt der UI die Funktionalität hinzu mit entsprechenden Listenern.
@@ -51,7 +54,7 @@ public class BarBezahlungsWekzeug
     {
     	//Alert mit Rückgeld und result true
     	_ui.getBestaetigenButton().setOnAction(e -> {
-    		Alert alert = new Alert(AlertType.CONFIRMATION,"Tickets verkauft! Bitte geben Sie " + centZuEuro(_rueckGeld) +" zurück!", ButtonType.OK);
+    		Alert alert = new Alert(AlertType.CONFIRMATION,"Tickets verkauft! Bitte geben Sie " + _rueckGeld.getFormatiertenString() +" zurück!", ButtonType.OK);
     		
     		_ui.getUIPane().setResult(true);    		
     		alert.show();
@@ -65,17 +68,48 @@ public class BarBezahlungsWekzeug
      	
      	//Bei Eingabe wird das Rückgeld errechnet 
     	_ui.getTxtGeldBekommen().setOnKeyReleased( e -> {
-    		_rueckGeld = 0;
+    		
     		_ui.getBestaetigenButton().setDisable(true);
     		
     		if(_ui.getTxtGeldBekommen().getText().length() > 0) {
-    			_bekommendesGeld = Integer.valueOf(_ui.getTxtGeldBekommen().getText());    	
-    			_rueckGeld = _bekommendesGeld -_zuBezahlenderPreis;    			
-    		 	if((_bekommendesGeld -_zuBezahlenderPreis) >=0){
-    		 		_ui.getBestaetigenButton().setDisable(false);
-    		 	}
+    			String helperBekommendesGeld = _ui.getTxtGeldBekommen().getText(); 
+    			if(!helperBekommendesGeld.contains("-")) {		
+    			
+    			String[] parts = helperBekommendesGeld.split(",");
+    			int euroCent;
+    			
+    			//const parts
+    			final int euro = 0;
+    			final int cent = 1;
     		
-    			_ui.getTxtRueckgeld().setText(String.valueOf(_rueckGeld));
+    			//Gib Cent und Euro
+    			if(parts.length > 1) {
+    				if(parts[cent].length() == 1) {
+    					parts[cent] = parts[cent] + "0";
+    				}
+    				if(parts[cent].length() >= 2) {
+    					parts[cent] = parts[cent].substring(0, 2);
+        			}
+    				
+    				euroCent = Integer.valueOf(parts[euro] + parts[cent]);
+    				_bekommendesGeld = GeldBetrag.get(euroCent); 	
+    			}
+    			else {   //Gibt nur Euro 				
+    				euroCent  = Integer.valueOf(parts[euro]) * 100;
+    			}
+    			_bekommendesGeld = GeldBetrag.get(euroCent); 
+    							
+    		 	if((_bekommendesGeld.gibEurocent() - _zuBezahlenderPreis.gibEurocent()) >=0){
+    		 		 _rueckGeld = _bekommendesGeld.subtrahiere(_zuBezahlenderPreis);    
+    		 		_ui.getBestaetigenButton().setDisable(false);
+    		 		_ui.getTxtRueckgeld().setText(_rueckGeld.getFormatiertenString());
+    		 	}
+    			}
+    			else {
+    				Alert alert = new Alert(AlertType.CONFIRMATION,"Bitte nur positive Beträge!", ButtonType.OK);
+    				alert.show();
+    			}
+    			
     		}
     		else {		
     			_ui.getTxtRueckgeld().setText("0");
