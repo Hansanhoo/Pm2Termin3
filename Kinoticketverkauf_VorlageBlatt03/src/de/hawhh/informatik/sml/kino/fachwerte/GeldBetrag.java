@@ -21,16 +21,15 @@ public final class GeldBetrag // final, weil es eine Wertklasse ist
         _cent = eurocent % 100;
         
     }
-
-
-   
     /**
-     * Gibt den Eurocentbetrag zurueck
+     * 
+     * @return EuroCent
      */
-	public int getEuroCent ()
+    public int getEurocent()
     {
-        return gibEurocent();        
-    }
+        return _euro * 100 + _cent;
+    }    
+
   
    
     /**
@@ -39,8 +38,8 @@ public final class GeldBetrag // final, weil es eine Wertklasse ist
      */ 
     public GeldBetrag addiere(GeldBetrag betrag)
     {
-        assert this.gibEurocent() > 0 : "Vorbedingung verletzt: betrag > 0";
-        return new GeldBetrag (gibEurocent() + betrag.gibEurocent()); 
+        assert this.getEurocent() > 0 : "Vorbedingung verletzt: betrag > 0";
+        return new GeldBetrag (getEurocent() + betrag.getEurocent()); 
     }
 
     
@@ -50,8 +49,8 @@ public final class GeldBetrag // final, weil es eine Wertklasse ist
      */
     public GeldBetrag subtrahiere(GeldBetrag betrag)
     {  
-        assert this.gibEurocent() >= betrag.gibEurocent() : "Vorbedingung verletzt: this.gibEurocent() >= betrag.gibEurocent()";
-        return new GeldBetrag (gibEurocent() - betrag.gibEurocent());
+        assert this.getEurocent() >= betrag.getEurocent() : "Vorbedingung verletzt: this.gibEurocent() >= betrag.gibEurocent()";
+        return new GeldBetrag (getEurocent() - betrag.getEurocent());
     }
 
     
@@ -63,20 +62,12 @@ public final class GeldBetrag // final, weil es eine Wertklasse ist
     public GeldBetrag mal(int zahl)
     {
         assert zahl > 0 : "Vorbedingung verletzt: zahl > 0";
-        return new GeldBetrag (gibEurocent() * zahl);
+        return new GeldBetrag (getEurocent() * zahl);
     }
     
 
 
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime + _cent;
-        result = prime * result + _euro;
-        return result;
-    }
+
 
 
     /**
@@ -87,15 +78,7 @@ public final class GeldBetrag // final, weil es eine Wertklasse ist
     {
         return getFormatiertenString();
     }
-    /**
-     * 
-     * @return EuroCent
-     */
-    public int gibEurocent()
-    {
-        return _euro * 100 + _cent;
-    }   
-    
+
     public int konvertiere()
     {
         return Integer.parseInt(getFormatiertenString());       
@@ -122,7 +105,16 @@ public final class GeldBetrag // final, weil es eine Wertklasse ist
      }
 
 
-     
+     @Override
+     public int hashCode()
+     {
+         final int prime = 31;
+         int result = 1;
+         result = prime + _cent;
+         result = prime * result + _euro;
+         return result;
+     }
+     @Override
      public boolean equals(Object o)
      {
          boolean result = false;

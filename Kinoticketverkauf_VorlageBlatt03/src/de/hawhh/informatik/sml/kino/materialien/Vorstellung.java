@@ -1,5 +1,6 @@
 package de.hawhh.informatik.sml.kino.materialien;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import de.hawhh.informatik.sml.kino.fachwerte.Datum;
@@ -26,7 +27,7 @@ public class Vorstellung
     private boolean[][] _verkauft;
     private boolean[][] _ausgewaehlt;
     private int _anzahlVerkauftePlaetze;
-
+    private Set<Platz> _ausg;
     /**
      * Erstellt eine neue Vorstellung.
      * 
@@ -68,9 +69,11 @@ public class Vorstellung
         _preis = preis;
         _verkauft = new boolean[kinosaal.getAnzahlReihen()][kinosaal
                 .getAnzahlSitzeProReihe()];
+//TODO:aufgabe 3
         _ausgewaehlt= new boolean[kinosaal.getAnzahlReihen()][kinosaal
                 .getAnzahlSitzeProReihe()];
         _anzahlVerkauftePlaetze = 0;
+        _ausg = new HashSet<>();
     }
 
     /**
@@ -206,12 +209,25 @@ public class Vorstellung
 
         return _verkauft[platz.getReihenNr()][platz.getSitzNr()];
     }
-    public boolean istAusgewaehlt(Platz platz)
+ 
+    /**
+     * Gibt an, ob ein bestimmter Platz bereits markiert ist.
+     * 
+     * @param platz der Sitzplatz.
+     * 
+     * @return <code>true</code>, falls der Platz markiert ist,
+     *         <code>false</code> sonst.
+     * 
+     * @require platz != null
+     * @require hatPlatz(platz)
+     */
+    //TODO: Aufgabe 2 markierung!
+    public boolean istMarkiert(Platz platz)
     {
         assert platz != null : "Vorbedingung verletzt: platz != null";
         assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
-
-        return _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()];
+        return _ausg.contains(platz);
+        //return _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()];
     }
     
 
@@ -245,12 +261,42 @@ public class Vorstellung
      * @require hatPlatz(platz)
      * 
      */
+    //TODO: Aufgabe 2 markierung!
     public void markierePlatz(Platz platz)
     {
         assert platz != null : "Vorbedingung verletzt: platz != null";
         assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";      
-
-        _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()] = true; 
+        _ausg.add(platz);
+      //  _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()] = true;       
+        
+    }
+    /**
+     * Entfernt Markierung eines Platzes.
+     * 
+     * @param platz der Sitzplatz.
+     * 
+     * @require platz != null
+     * @require hatPlatz(platz)
+     * 
+     */
+    //TODO: Aufgabe 2 markierung!
+    public void aktualisiereMarkierungen(Set<Platz> plaetze)
+    {   
+    	for(Platz p : plaetze) {
+    		_ausg.add(p);
+    	}
+        
+    }
+    /**
+     * Entfernt Markierung einer Vorstellung
+     * 
+     * 
+     */
+    //TODO: Aufgabe 2 markierung!
+    public void entferneAlle()
+    {   
+    	_ausg = new HashSet<>();
+        
     }
 
     /**
@@ -315,14 +361,35 @@ public class Vorstellung
     {
         assert plaetze != null : "Vorbedingung verletzt: plaetze != null";
         assert hatPlaetze(plaetze) : "Vorbedingung verletzt: hatPlaetze(plaetze)";
-        assert sindVerkaufbar(plaetze) : "Vorbedingung verletzt: sindVerkaufbar(plaetze)";
-
+        _ausg = new HashSet<>();
         for (Platz platz : plaetze)
-        {
-            markierePlatz(platz);
+        {        	
+        	markierePlatz(platz);    
         }
     }
 
+
+    /**
+     * Prüft, ob die gegebenen Plätze alle verkauft werden können. Dafür wird
+     * geschaut, ob keiner der gegebenen Plätze bisher verkauft ist.
+     * 
+     * Liefert true, wenn alle Plätze verkaufbar sind, sonst false.
+     * 
+     * @require plaetze != null
+     * @require hatPlaetze(plaetze)
+     */
+    public boolean sindMarkiert(Set<Platz> plaetze)
+    {
+        assert plaetze != null : "Vorbedingung verletzt: plaetze != null";
+        assert hatPlaetze(plaetze) : "Vorbedingung verletzt: hatPlaetze(plaetze)";
+
+        boolean result = true;
+        for (Platz platz : plaetze)
+        {
+            result &= !istMarkiert(platz);
+        }
+        return result;
+    }
     /**
      * Prüft, ob die gegebenen Plätze alle verkauft werden können. Dafür wird
      * geschaut, ob keiner der gegebenen Plätze bisher verkauft ist.

@@ -90,9 +90,23 @@ public class PlatzVerkaufsWerkzeug
     {
         _ui.getVerkaufenButton().setDisable(!istVerkaufenMoeglich(plaetze));
         _ui.getStornierenButton().setDisable(!istStornierenMoeglich(plaetze));
-        if(_vorstellung != null) {//Merke in Vorstellung
-        	_vorstellung.markierePlaetze(plaetze);
+     /*   if(_vorstellung != null ) {//Merke in Vorstellung
+        	   //TODO: Aufgabe 2 markierung!   
+        	
+        	for(Platz p : plaetze) {
+        		if(_ui.getPlatzplan().getAusgewaehltePlaetze().contains(p)) {
+        			_vorstellung.markierePlatz(p);
+        		}      
+        		else {
+        			_vorstellung.entferneMarkierung(p);
+        		}
+        		
+        	}    
+        }*/
+        if(_vorstellung != null) {
+        	_vorstellung.aktualisiereMarkierungen(plaetze);
         }
+        
         aktualisierePreisanzeige(plaetze);
     }
 
@@ -101,7 +115,7 @@ public class PlatzVerkaufsWerkzeug
      */
     private void aktualisierePreisanzeige(Set<Platz> plaetze)
     {
-
+    	//TODO: Geldbetrag anzeigen
         if (istVerkaufenMoeglich(plaetze))
         {
             int preis = _vorstellung.getPreisFuerPlaetze(plaetze);
@@ -146,6 +160,7 @@ public class PlatzVerkaufsWerkzeug
     /**
      * Aktualisiert den Platzplan basierend auf der ausgwählten Vorstellung.
      */
+    //TODO:MARKIERUNG 2 Hier wird der PLatzPLan aktualisiert! Also hier muss auch geprüft werden ob markiert werden soll!
     private void aktualisierePlatzplan()
     {
         if (_vorstellung != null)
@@ -162,9 +177,8 @@ public class PlatzVerkaufsWerkzeug
                 {
                     _ui.getPlatzplan().markierePlatzAlsVerkauft(platz);
                 }
-                
-                else if(_vorstellung.istAusgewaehlt(platz)) {
-                	_ui.getPlatzplan().getAusgewaehltePlaetze().add(platz);
+               
+                else if(_vorstellung.istMarkiert(platz)) {              
                 	//gucken ob PLätze markiert wurden
                 	_ui.getPlatzplan().markierePlatzAlsAusgewaehlt(platz);
                 	//adden um zu überprüfen ob man verkaufen stornieren o.ä kann
@@ -173,12 +187,11 @@ public class PlatzVerkaufsWerkzeug
                 	
                 }
                 else {
-                	_ui.getPlatzplan().markierePlatzAlsFrei(platz);
+                	_ui.getPlatzplan().markierePlatzAlsFrei(platz);                	
                 }
             }
             
-            if(ausgewaehltePlaetze != null) {
-            	setAusgewaehltePlaetze(ausgewaehltePlaetze);
+            if(ausgewaehltePlaetze != null) {            	
             	reagiereAufNeuePlatzAuswahl(ausgewaehltePlaetze);
             }
         }
@@ -187,28 +200,16 @@ public class PlatzVerkaufsWerkzeug
             _ui.getPlatzplan().setAnzahlPlaetze(0, 0);
         }
     }
-    private void setAusgewaehltePlaetze(Set<Platz> ausgewaehltePlaetze)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 
-	/**
-     * Verkauft die ausgewählten Plaetze.
-     */
-    private void markierePlaetze(Vorstellung vorstellung)
-    {
-        Set<Platz> plaetze = _ui.getPlatzplan().getAusgewaehltePlaetze();
-        vorstellung.markierePlaetze(plaetze);
-        aktualisierePlatzplan();
-    }
+
     /**
      * Verkauft die ausgewählten Plaetze.
      */
     private void verkaufePlaetze(Vorstellung vorstellung)
     {
         Set<Platz> plaetze = _ui.getPlatzplan().getAusgewaehltePlaetze();
-        vorstellung.verkaufePlaetze(plaetze);
+        vorstellung.verkaufePlaetze(plaetze);        
+        vorstellung.entferneAlle();
         aktualisierePlatzplan();
     }
 
@@ -219,6 +220,7 @@ public class PlatzVerkaufsWerkzeug
     {
         Set<Platz> plaetze = _ui.getPlatzplan().getAusgewaehltePlaetze();
         vorstellung.stornierePlaetze(plaetze);
+        vorstellung.entferneAlle();
         aktualisierePlatzplan();
     }
 }
