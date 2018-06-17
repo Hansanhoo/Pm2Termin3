@@ -70,8 +70,8 @@ public class Vorstellung
         _verkauft = new boolean[kinosaal.getAnzahlReihen()][kinosaal
                 .getAnzahlSitzeProReihe()];
 //TODO:aufgabe 3
-        _ausgewaehlt= new boolean[kinosaal.getAnzahlReihen()][kinosaal
-                .getAnzahlSitzeProReihe()];
+      //  _ausgewaehlt= new boolean[kinosaal.getAnzahlReihen()][kinosaal
+      //          .getAnzahlSitzeProReihe()];
         _anzahlVerkauftePlaetze = 0;
         _ausg = new HashSet<>();
     }
@@ -248,7 +248,7 @@ public class Vorstellung
         assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";
         assert !istPlatzVerkauft(platz) : "Vorbedingung verletzt: !istPlatzVerkauft(platz)";
 
-        _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()] = false; 
+        _ausg.remove(platz);
         _verkauft[platz.getReihenNr()][platz.getSitzNr()] = true;
         _anzahlVerkauftePlaetze++;
     }
@@ -271,7 +271,7 @@ public class Vorstellung
         
     }
     /**
-     * Entfernt Markierung eines Platzes.
+     * Markiert die übergebenen Plätze
      * 
      * @param platz der Sitzplatz.
      * 
@@ -292,7 +292,6 @@ public class Vorstellung
      * 
      * 
      */
-    //TODO: Aufgabe 2 markierung!
     public void entferneAlle()
     {   
     	_ausg = new HashSet<>();
@@ -317,6 +316,7 @@ public class Vorstellung
         assert istPlatzVerkauft(platz) : "Vorbedingung verletzt: istPlatzVerkauft(platz)";
 
         _verkauft[platz.getReihenNr()][platz.getSitzNr()] = false;
+        _ausg.remove(platz);
         _anzahlVerkauftePlaetze--;
     }
 
@@ -370,10 +370,10 @@ public class Vorstellung
 
 
     /**
-     * Prüft, ob die gegebenen Plätze alle verkauft werden können. Dafür wird
-     * geschaut, ob keiner der gegebenen Plätze bisher verkauft ist.
+     * Prüft, ob die gegebenen Plätze alle Markiert werden können. Dafür wird
+     * geschaut, ob keiner der gegebenen Plätze bisher markiert ist.
      * 
-     * Liefert true, wenn alle Plätze verkaufbar sind, sonst false.
+     * Liefert true, wenn alle Plätze markiert sind, sonst false.
      * 
      * @require plaetze != null
      * @require hatPlaetze(plaetze)
