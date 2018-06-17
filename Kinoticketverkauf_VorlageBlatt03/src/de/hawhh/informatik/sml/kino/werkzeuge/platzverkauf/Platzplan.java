@@ -77,13 +77,13 @@ class Platzplan extends GridPane
                 {
                     _ausgewaehltePlaetze.remove(platz);
                     button.setAusgewaehlt(false);
-                    informiereSelectionListener(_ausgewaehltePlaetze);
+                    informiereSelectionListener(_ausgewaehltePlaetze,false);
                 }
                 else
                 {
                     _ausgewaehltePlaetze.add(platz);
                     button.setAusgewaehlt(true);
-                    informiereSelectionListener(_ausgewaehltePlaetze);
+                    informiereSelectionListener(_ausgewaehltePlaetze,true);
                 }
             }
         };
@@ -118,13 +118,13 @@ class Platzplan extends GridPane
      * @param ausgewaehltePlaetze
      *            die neue Auswahl.
      */
-    private void informiereSelectionListener(Set<Platz> ausgewaehltePlaetze)
+    private void informiereSelectionListener(Set<Platz> ausgewaehltePlaetze, boolean result)
     {
         PlatzSelectionEvent event = new PlatzSelectionEvent(this,
                 ausgewaehltePlaetze);
         for (PlatzSelectionListener listener : _selectionListener)
         {
-            listener.auswahlGeaendert(event);
+            listener.auswahlGeaendert(event,result);
         }
     }
 
@@ -182,7 +182,7 @@ class Platzplan extends GridPane
 
         // Nach der Änderung ist kein Platz ausgewählt
         _ausgewaehltePlaetze.clear();
-        informiereSelectionListener(_ausgewaehltePlaetze);
+       // informiereSelectionListener(_ausgewaehltePlaetze);
     }
 
     private void addGrowableRowConstraint()

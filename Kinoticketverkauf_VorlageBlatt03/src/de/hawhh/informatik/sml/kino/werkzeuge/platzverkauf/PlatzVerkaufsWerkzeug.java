@@ -81,7 +81,7 @@ public class PlatzVerkaufsWerkzeug
 				.setOnAction(e -> stornierePlaetze(_vorstellung));
 
 		_ui.getPlatzplan().addPlatzSelectionListener(
-				e -> reagiereAufNeuePlatzAuswahl(e.getAusgewaehltePlaetze()));
+				(e,b) -> reagiereAufNeuePlatzAuswahl(e.getAusgewaehltePlaetze(),b));
 
 	}
 
@@ -92,16 +92,22 @@ public class PlatzVerkaufsWerkzeug
 	 * @param plaetze
 	 *            die jetzt ausgewählten Plätze.
 	 */
-	private void reagiereAufNeuePlatzAuswahl(Set<Platz> plaetze)
+	private void reagiereAufNeuePlatzAuswahl(Set<Platz> plaetze,boolean result)
 	{
 
 		_ui.getVerkaufenButton().setDisable(!istVerkaufenMoeglich(plaetze));
 		_ui.getStornierenButton().setDisable(!istStornierenMoeglich(plaetze));
 
+		//TODO: Bessere IF das er nicht reingeht wenn er die Vorstellung lädt! sonder nur wenn geklickt
 		if (_vorstellung != null)//TODO:Markieren wenn geklickt.
 		{
+			if(!result) {
+				_vorstellung.entferneAlle();
+			}			
 			_vorstellung.aktualisiereMarkierungen(plaetze);
 		}
+		
+		
 
 		aktualisierePreisanzeige(plaetze);
 
@@ -206,7 +212,7 @@ public class PlatzVerkaufsWerkzeug
 
 			if (ausgewaehltePlaetze != null)
 			{
-				reagiereAufNeuePlatzAuswahl(ausgewaehltePlaetze);
+				reagiereAufNeuePlatzAuswahl(ausgewaehltePlaetze,true);
 			}
 		}
 		else

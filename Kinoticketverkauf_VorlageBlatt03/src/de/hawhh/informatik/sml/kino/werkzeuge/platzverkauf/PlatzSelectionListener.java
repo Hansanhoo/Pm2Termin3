@@ -17,5 +17,5 @@ interface PlatzSelectionListener extends EventListener
      * @param event
      *            das Event, das die Änderung beschreibt.
      */
-    void auswahlGeaendert(PlatzSelectionEvent event);
+    void auswahlGeaendert(PlatzSelectionEvent event,boolean result);
 }

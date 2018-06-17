@@ -266,26 +266,26 @@ public class Vorstellung
     {
         assert platz != null : "Vorbedingung verletzt: platz != null";
         assert hatPlatz(platz) : "Vorbedingung verletzt: hatPlatz(platz)";      
-        _ausg.add(platz);
-      //  _ausgewaehlt[platz.getReihenNr()][platz.getSitzNr()] = true;       
+        _ausg.add(platz);   
         
     }
     /**
      * Markiert die übergebenen Plätze
      * 
-     * @param platz der Sitzplatz.
+     * @require plaetze != null
+     * @require hatPlaetze(plaetze)
      * 
-     * @require platz != null
-     * @require hatPlatz(platz)
      * 
      */
     //TODO: Aufgabe 2 markierung!
     public void aktualisiereMarkierungen(Set<Platz> plaetze)
-    {   
-    	for(Platz p : plaetze) {
-    		_ausg.add(p);
-    	}
+    {  
+        assert plaetze != null : "Vorbedingung verletzt: plaetze != null";
+        assert hatPlaetze(plaetze) : "Vorbedingung verletzt: hatPlaetze(plaetze)";
         
+		for(Platz p : plaetze) {
+		    _ausg.add(p);
+		} 
     }
     /**
      * Entfernt Markierung einer Vorstellung
